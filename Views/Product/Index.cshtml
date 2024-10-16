@@ -1,0 +1,39 @@
+﻿@model IEnumerable<NimoInfotech.Models.ProductModel>
+
+<h2>Products</h2>
+<a asp-action="Create" class="btn btn-primary">Create New Product</a>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>ProductId</th>
+            <th>ProductName</th>
+            <th>CategoryId</th>
+            <th>CategoryName</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var product in Model)
+        {
+            <tr>
+                <td>@product.ProductId</td>
+                <td>@product.ProductName</td>
+                <td>@product.CategoryId</td>
+                <td>@product.Category.CategoryName</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@product.ProductId" class="btn btn-warning">Edit</a>
+                    <a asp-action="Delete" asp-route-id="@product.ProductId" class="btn btn-danger">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<!-- Pagination -->
+<div>
+    @for (int i = 1; i <= Math.Ceiling((decimal)ViewBag.TotalRecords / ViewBag.PageSize); i++)
+    {
+        <a asp-action="Index" asp-route-page="@i" class="btn btn-info @((i == ViewBag.CurrentPage) ? "active" : "")">@i</a>
+    }
+</div>
