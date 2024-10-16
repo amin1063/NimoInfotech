@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using NimoInfotech.Models;
@@ -10,7 +10,6 @@ namespace NimoInfotech.Controllers
         // Use dependency injection to get the DbContext
         private readonly AppDbContext _context;
 
-       
         public CategoryController(AppDbContext context)
         {
             _context = context;
@@ -30,11 +29,10 @@ namespace NimoInfotech.Controllers
         }
 
         // POST: Create Category
-       
         [HttpPost]
         public ActionResult Create(CategoryModel category)
         {
-            Console.WriteLine("Create action hit."); 
+            Console.WriteLine("Create action hit.");
 
             if (ModelState.IsValid)
             {
@@ -55,40 +53,38 @@ namespace NimoInfotech.Controllers
         }
 
         // GET: Edit Category
-        public ActionResult Edit(int id)
+        public ActionResult Edit(int id) // Changed from EditCategory to Edit
         {
             var category = _context.Categories.Find(id);
             if (category == null)
             {
-                return NotFound(); 
+                return NotFound();
             }
-            return View(category);
+            return View(category); // This passes CategoryModel to the view
         }
 
-        // POST: Edit Product
+        // POST: Edit Category
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(ProductCreateViewModel productViewModel)
+        public ActionResult Edit(CategoryModel categoryModel) // Changed from EditCategory to Edit
         {
             if (ModelState.IsValid)
             {
-                var product = _context.Products.Find(productViewModel.ProductId); 
+                var category = _context.Categories.Find(categoryModel.CategoryId);
 
-                if (product == null)
+                if (category == null)
                 {
-                    return NotFound(); 
+                    return NotFound();
                 }
 
                 // Update properties
-                product.ProductName = productViewModel.ProductName;
-                product.CategoryId = productViewModel.CategoryId;
+                category.CategoryName = categoryModel.CategoryName;
 
                 _context.SaveChanges(); // Save changes
                 return RedirectToAction("Index");
             }
 
-            ViewBag.CategoryId = new SelectList(_context.Categories, "CategoryId", "CategoryName", productViewModel.CategoryId);
-            return View(productViewModel);
+            return View(categoryModel); // Ensure we're passing the CategoryModel back
         }
 
         // GET: Delete Category
@@ -97,7 +93,7 @@ namespace NimoInfotech.Controllers
             var category = _context.Categories.Find(id);
             if (category == null)
             {
-                return NotFound(); 
+                return NotFound();
             }
             return View(category);
         }
@@ -109,7 +105,7 @@ namespace NimoInfotech.Controllers
             var category = _context.Categories.Find(id);
             if (category == null)
             {
-                return NotFound(); 
+                return NotFound();
             }
             _context.Categories.Remove(category);
             _context.SaveChanges();
